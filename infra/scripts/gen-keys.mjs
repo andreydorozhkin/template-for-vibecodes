@@ -53,7 +53,6 @@ const values = {
   POSTGRES_HOST: "db",
   POSTGRES_DB: "postgres",
   POSTGRES_PORT: "5432",
-  POSTGRES_USER: "postgres",
   SUPABASE_PUBLIC_URL: "http://localhost:8000",
   API_EXTERNAL_URL: "http://localhost:8000/auth/v1",
   SITE_URL: "http://localhost:3000",
