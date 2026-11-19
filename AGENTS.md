@@ -39,4 +39,10 @@ SQL в `infra/db/init/` — служебный bootstrap образа Supabase (
 
 ## Проверки
 
-Локально перед PR: `npm run lint`, `npm run typecheck`, `npm test`, `npm run test:functions`. CI повторяет это и добавляет gitleaks и SonarQube. Quality gate SonarQube обязателен: если он не пройден, пайплайн красный.
+Локально перед PR: `npm run lint`, `npm run typecheck`, `npm test`, `npm run test:functions`. CI повторяет это и добавляет gitleaks и SonarQube. Quality gate SonarQube обязателен: если он не пройден, пайплайн красный. CI ходит на внешний сервер из секретов `SONAR_HOST_URL` и `SONAR_TOKEN`. Без секретов пайплайн красный. Сервер должен быть тем же Community Build 26.5 с плагином ветвей, иначе анализ pull request не примет quality gate.
+
+## Ограничения, которые не обходят
+
+- Профиль пользователя нельзя создать триггером на `auth.users`. Таблицу профиля заполняет Edge Function или клиент после входа.
+- Плагин ветвей SonarQube неофициальный. Версию сервера и версию плагина меняют только вместе. Сейчас это SonarQube `26.5.0.122743-community` и плагин `26.5.0`.
+- В окружении контейнера функций переменная `SUPABASE_SERVICE_ROLE_KEY` есть, потому что так устроен self-hosted runtime. Код функции её не читает, пока в PR нет отдельного обоснования.

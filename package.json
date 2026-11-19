@@ -1,0 +1,14 @@
+{
+  "name": "template-for-mvp",
+  "private": true,
+  "scripts": {
+    "keys": "node infra/scripts/gen-keys.mjs",
+    "up": "docker compose --env-file infra/.env -f infra/docker-compose.yml up -d --build",
+    "down": "docker compose --env-file infra/.env -f infra/docker-compose.yml down",
+    "logs": "docker compose --env-file infra/.env -f infra/docker-compose.yml logs -f",
+    "lint": "npm --prefix app run lint",
+    "typecheck": "npm --prefix app run typecheck",
+    "test": "npm --prefix app test",
+    "test:functions": "docker run --rm -v ${PWD}/supabase/functions:/work -w /work denoland/deno:2.5.7 deno test --allow-env"
+  }
+}
