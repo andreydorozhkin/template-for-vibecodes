@@ -38,6 +38,26 @@ jobs:
       - run: deno test --allow-env
         working-directory: supabase/functions
 
+  compose:
+    name: compose config, loopback-only ports
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Generate throwaway env files
+        run: |
+          node infra/scripts/gen-keys.mjs
+          node infra/scripts/gen-keys.mjs --prod --app-url https://app.example.com --api-url https://api.example.com
+          sed -i -E 's/^(SMTP_[A-Z_]+)=$/\1=ci/' infra/.env.prod
+      - name: Dev stack
+        run: docker compose --env-file infra/.env -f infra/docker-compose.yml --profile sonar config --format json | node infra/scripts/check-ports.mjs
+      - name: Prod stack
+        run: docker compose --env-file infra/.env.prod -f infra/docker-compose.yml -f infra/docker-compose.prod.yml --profile admin config --format json | node infra/scripts/check-ports.mjs
+      - name: SafeLine
+        run: docker compose -p safeline --env-file infra/safeline/.env -f infra/safeline/compose.yaml config --format json | node infra/scripts/check-ports.mjs
+
   gitleaks:
     name: gitleaks
     runs-on: ubuntu-latest
@@ -55,7 +75,7 @@ jobs:
 
   sonarqube:
     name: sonarqube
-    needs: [app, functions, gitleaks]
+    needs: [app, functions, compose, gitleaks]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
