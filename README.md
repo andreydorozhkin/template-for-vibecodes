@@ -36,11 +36,24 @@ docker compose --env-file infra/.env -f infra/docker-compose.yml ps
 | http://localhost:9000 | SonarQube. Первый вход `admin` / `admin`, пароль сразу просит сменить |
 | localhost:5432 | Postgres |
 
+Все порты слушают только `127.0.0.1`, из локальной сети стек не виден. SonarQube включён профилем `sonar`, который `npm run up` передаёт сам.
+
 Регистрация в примере подтверждает почту сама (`ENABLE_EMAIL_AUTOCONFIRM`), почтовый сервер не нужен. Откройте http://localhost:3000/login, создайте учётную запись и сохраните заметку. Запись идёт в Edge Function `create-note`, список читается через RLS.
 
 Остановить: `npm run down`. Тома с данными при этом остаются.
 
 Для разработки интерфейса без пересборки контейнера, когда стек уже поднят: `npm --prefix app run dev`. Браузер и сервер Next на хосте ходят в Kong по `http://localhost:8000` из `app/.env.local`.
+
+## Продакшен
+
+На сервере стек работает за SafeLine WAF. Наружу открыты только 80 и 443, Postgres, Studio и SonarQube не публикуются. Пошагово: [docs/production.md](docs/production.md).
+
+```bash
+npm run keys:prod -- --app-url https://app.example.com --api-url https://api.example.com
+# заполнить SMTP_* в infra/.env.prod
+npm run up:prod
+npm run waf:up
+```
 
 ## Новый проект из шаблона
 
@@ -97,7 +110,9 @@ npm run test:functions
 | `supabase/migrations` | Таблицы и RLS |
 | `supabase/functions` | Edge Functions и `deno test` |
 | `infra/` | Compose, Kong, bootstrap Postgres, SonarQube, генерация ключей |
+| `infra/docker-compose.prod.yml` | Прод-оверлей: без публичных портов, Studio по профилю, обязательный SMTP |
+| `infra/safeline` | SafeLine WAF, отдельный compose-проект для прода |
 | `deploy/helm` | Пример чарта, не основной способ запуска |
-| `.github/workflows/ci.yml` | lint, typecheck, Vitest, deno test, gitleaks, SonarQube |
+| `.github/workflows/ci.yml` | lint, typecheck, Vitest, deno test, проверка портов в compose, gitleaks, SonarQube |
 
 SQL в `infra/db/init` принадлежит платформе Supabase. В миграции приложения его не копируют: там есть функции платформы, а в `supabase/migrations` функций быть не должно.
