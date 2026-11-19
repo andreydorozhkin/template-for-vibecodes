@@ -34,7 +34,7 @@ services:
       - db-data:/var/lib/postgresql/data
       - db-config:/etc/postgresql-custom
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
 
   auth:
     image: supabase/gotrue:v2.197.0
@@ -276,8 +276,7 @@ services:
       timeout: 5s
       retries: 20
     ports:
-      - "${KONG_HTTP_PORT:-8000}:8000"
-      - "${KONG_HTTPS_PORT:-8443}:8443"
+      - "127.0.0.1:${KONG_HTTP_PORT:-8000}:8000"
     environment:
       KONG_DATABASE: "off"
       KONG_DECLARATIVE_CONFIG: /usr/local/kong/kong.yml
@@ -359,7 +358,7 @@ services:
       NEXT_PUBLIC_SUPABASE_ANON_KEY: ${ANON_KEY}
       SUPABASE_INTERNAL_URL: ${SUPABASE_INTERNAL_URL:-http://kong:8000}
     ports:
-      - "${APP_PORT:-3000}:3000"
+      - "127.0.0.1:${APP_PORT:-3000}:3000"
     depends_on:
       kong:
         condition: service_healthy
@@ -370,6 +369,7 @@ services:
 
   sonar-db:
     image: postgres:16.10-alpine
+    profiles: [sonar]
     restart: unless-stopped
     environment:
       POSTGRES_USER: sonar
@@ -386,6 +386,7 @@ services:
   sonarqube:
     build:
       context: ./sonarqube
+    profiles: [sonar]
     restart: unless-stopped
     depends_on:
       sonar-db:
@@ -401,7 +402,7 @@ services:
       SONAR_WEB_JAVAADDITIONALOPTS: "-javaagent:/opt/sonarqube/extensions/plugins/sonarqube-community-branch-plugin-26.5.0.jar=web"
       SONAR_CE_JAVAADDITIONALOPTS: "-javaagent:/opt/sonarqube/extensions/plugins/sonarqube-community-branch-plugin-26.5.0.jar=ce"
     ports:
-      - "${SONAR_PORT:-9000}:9000"
+      - "127.0.0.1:${SONAR_PORT:-9000}:9000"
     ulimits:
       nofile:
         soft: 65536
