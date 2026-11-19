@@ -1,0 +1,25 @@
+# Secrets. Never commit these.
+.env
+.env.*
+!.env.example
+infra/.env
+app/.env.local
+
+# Dependencies and build output
+node_modules/
+app/.next/
+app/out/
+app/coverage/
+*.lcov
+supabase/functions/coverage/
+supabase/functions/cov/
+
+# Local data volumes
+infra/volumes/
+
+# Tooling caches
+.sonar/
+.scannerwork/
+coverage/
+*.tsbuildinfo
+.DS_Store
