@@ -1,0 +1,8 @@
+title = "template gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Example env files list names and never values."
+paths = ['''(^|/)\.env\.example$''']
