@@ -1,0 +1,19 @@
+replicaCount: 1
+
+image:
+  repository: mvp-app
+  tag: local
+  pullPolicy: IfNotPresent
+
+service:
+  port: 3000
+
+ingress:
+  enabled: false
+  host: app.example.com
+
+# Replace these in a real deploy. Do not commit filled-in keys.
+env:
+  supabaseUrl: ""
+  supabaseAnonKey: ""
+  supabaseInternalUrl: ""

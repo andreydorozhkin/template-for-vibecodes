@@ -1,0 +1,6 @@
+apiVersion: v2
+name: app
+description: Example chart for the Next.js app. This is not how the template is meant to be run.
+type: application
+version: 0.1.0
+appVersion: "0.1.0"

@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-app
+  labels:
+    app: {{ .Release.Name }}-app
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-app
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-app
+    spec:
+      containers:
+        - name: app
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.service.port }}
+          env:
+            - name: NEXT_PUBLIC_SUPABASE_URL
+              value: {{ .Values.env.supabaseUrl | quote }}
+            - name: NEXT_PUBLIC_SUPABASE_ANON_KEY
+              value: {{ .Values.env.supabaseAnonKey | quote }}
+            - name: SUPABASE_INTERNAL_URL
+              value: {{ .Values.env.supabaseInternalUrl | quote }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.service.port }}
