@@ -3,7 +3,8 @@
 # Runs as its own compose project (npm run waf:up) with infra/safeline/.env, because its
 # POSTGRES_PASSWORD and REGION would collide with the Supabase variables in infra/.env.prod.
 # safeline-tengine uses host networking: it listens on the host ports 80/443 and proxies
-# to upstreams configured in the console, here http://127.0.0.1:3000 (app) and http://127.0.0.1:8000 (Kong).
+# to upstreams configured in the console. On 9.4.3+ those must not be 127.0.0.1;
+# this template uses http://10.88.0.1:3000 (app), :8000 (Kong) and :9000 (SonarQube).
 
 networks:
   safeline-ce:

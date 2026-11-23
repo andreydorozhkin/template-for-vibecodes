@@ -6,6 +6,15 @@
 infra/.env
 app/.env.local
 
+# Private keys and certificates. SafeLine stores the live copies in SAFELINE_DIR.
+*.pem
+*.key
+*.crt
+*.cer
+*.csr
+*.p12
+*.pfx
+
 # Dependencies and build output
 node_modules/
 app/.next/

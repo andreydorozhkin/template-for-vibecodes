@@ -39,7 +39,7 @@ jobs:
         working-directory: supabase/functions
 
   compose:
-    name: compose config, loopback-only ports
+    name: compose config, no public ports
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -49,12 +49,19 @@ jobs:
       - name: Generate throwaway env files
         run: |
           node infra/scripts/gen-keys.mjs
-          node infra/scripts/gen-keys.mjs --prod --app-url https://app.example.com --api-url https://api.example.com
+          node infra/scripts/gen-keys.mjs --prod --app-url https://app.example.com --api-url https://api.example.com --sonar-url https://sonar.example.com
           sed -i -E 's/^(SMTP_[A-Z_]+)=$/\1=ci/' infra/.env.prod
       - name: Dev stack
-        run: docker compose --env-file infra/.env -f infra/docker-compose.yml --profile sonar config --format json | node infra/scripts/check-ports.mjs
+        run: |
+          services=$(docker compose --env-file infra/.env -f infra/docker-compose.yml config --services)
+          echo "$services" | grep -qx sonarqube && { echo "local npm run up must not start SonarQube"; exit 1; }
+          docker compose --env-file infra/.env -f infra/docker-compose.yml --profile sonar config --format json | node infra/scripts/check-ports.mjs
       - name: Prod stack
-        run: docker compose --env-file infra/.env.prod -f infra/docker-compose.yml -f infra/docker-compose.prod.yml --profile admin config --format json | node infra/scripts/check-ports.mjs
+        run: |
+          services=$(docker compose --env-file infra/.env.prod -f infra/docker-compose.yml -f infra/docker-compose.prod.yml config --services)
+          echo "$services" | grep -qx sonarqube || { echo "production must start SonarQube"; exit 1; }
+          echo "$services" | grep -qx studio && { echo "production must not start Studio"; exit 1; }
+          docker compose --env-file infra/.env.prod -f infra/docker-compose.yml -f infra/docker-compose.prod.yml --profile admin config --format json | node infra/scripts/check-ports.mjs
       - name: SafeLine
         run: docker compose -p safeline --env-file infra/safeline/.env -f infra/safeline/compose.yaml config --format json | node infra/scripts/check-ports.mjs
 
@@ -88,7 +95,7 @@ jobs:
         run: |
           if [ -z "$SONAR_HOST_URL" ] || [ -z "$SONAR_TOKEN" ]; then
             echo "Set repository secrets SONAR_HOST_URL and SONAR_TOKEN."
-            echo "CI does not start SonarQube itself. The server must be the image from infra/sonarqube, with the branch plugin, and the project key template-for-mvp."
+            echo "Point SONAR_HOST_URL at the production SonarQube (https://sonar.example.com). The image is infra/sonarqube: Community Build 26.5 and the branch plugin. Project key is sonar.projectKey in sonar-project.properties."
             exit 1
           fi
       - uses: actions/setup-node@v4
@@ -106,6 +113,9 @@ jobs:
       - run: deno test --allow-env --coverage=cov && deno coverage --lcov cov > coverage.lcov
         working-directory: supabase/functions
       - uses: SonarSource/sonarqube-scan-action@v8
+        with:
+          # The branch plugin posts the GitHub check only when the scanned commit is named.
+          args: ${{ github.event_name == 'pull_request' && format('-Dsonar.scm.revision={0}', github.event.pull_request.head.sha) || '' }}
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}

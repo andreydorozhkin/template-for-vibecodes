@@ -1,6 +1,6 @@
 // Dev:  node infra/scripts/gen-keys.mjs [--force]
 //       writes infra/.env and app/.env.local
-// Prod: node infra/scripts/gen-keys.mjs --prod --app-url https://app.example.com --api-url https://api.example.com [--force]
+// Prod: node infra/scripts/gen-keys.mjs --prod --app-url https://app.example.com --api-url https://api.example.com --sonar-url https://sonar.example.com [--force]
 //       writes infra/.env.prod and infra/safeline/.env; SMTP_* stay empty and must be filled in by hand
 import { createHmac, randomBytes } from "node:crypto";
 import { existsSync, writeFileSync } from "node:fs";
@@ -14,6 +14,7 @@ const { values: args } = parseArgs({
     prod: { type: "boolean", default: false },
     "app-url": { type: "string" },
     "api-url": { type: "string" },
+    "sonar-url": { type: "string" },
     "safeline-dir": { type: "string", default: "/data/safeline" },
   },
 });
@@ -74,6 +75,7 @@ const serviceRoleKey = signJwt("service_role");
 
 const appUrl = args.prod ? httpsUrl("app-url") : "http://localhost:3000";
 const apiUrl = args.prod ? httpsUrl("api-url") : "http://localhost:8000";
+const sonarUrl = args.prod ? httpsUrl("sonar-url") : "";
 
 const values = {
   POSTGRES_PASSWORD: secret(24),
@@ -130,6 +132,7 @@ const values = {
   SUPABASE_INTERNAL_URL: "http://kong:8000",
   APP_PORT: "3000",
   SONAR_PORT: "9000",
+  ...(args.prod ? { SONAR_PUBLIC_URL: sonarUrl, UPSTREAM_ADDR: "10.88.0.1" } : {}),
 };
 
 function envFile(header, entries) {

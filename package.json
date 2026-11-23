@@ -3,7 +3,8 @@
   "private": true,
   "scripts": {
     "keys": "node infra/scripts/gen-keys.mjs",
-    "up": "docker compose --env-file infra/.env -f infra/docker-compose.yml --profile sonar up -d --build",
+    "up": "docker compose --env-file infra/.env -f infra/docker-compose.yml up -d --build",
+    "up:sonar": "docker compose --env-file infra/.env -f infra/docker-compose.yml --profile sonar up -d --build sonarqube",
     "down": "docker compose --env-file infra/.env -f infra/docker-compose.yml --profile sonar down",
     "logs": "docker compose --env-file infra/.env -f infra/docker-compose.yml --profile sonar logs -f",
     "keys:prod": "node infra/scripts/gen-keys.mjs --prod",
