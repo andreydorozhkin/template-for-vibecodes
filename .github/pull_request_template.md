@@ -10,7 +10,7 @@
 ## Тесты
 
 - [ ] Тесты написаны по критериям и сначала падали
-- [ ] `npm run lint`, `npm run typecheck`, `npm test`, `npm run test:functions` зелёные локально
+- [ ] `npm run lint`, `npm run typecheck`, `npm test`, `npm run test:functions`, `npm run test:stories` зелёные локально
 
 ## Проверки
 
