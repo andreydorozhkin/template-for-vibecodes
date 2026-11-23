@@ -1,7 +1,7 @@
 ---
 id: "004"
 title: "Строже gitleaks для вайбкода"
-status: in_progress
+status: done
 branch: "feat-gitleaks-docs-skill"
 pr: ""
 external: ""

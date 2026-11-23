@@ -73,6 +73,30 @@ SQL в `infra/db/init/` — служебный bootstrap образа Supabase (
 docker run --rm -v "$PWD":/repo -w /repo ghcr.io/gitleaks/gitleaks:v8.30.1 git --config .gitleaks.toml --redact --no-banner
 ```
 
+Два конфига:
+
+- `.gitleaks.toml` — база для CI и команды выше (дефолтные правила + секреты шаблона вроде `POSTGRES_PASSWORD` / JWT).
+- `.gitleaks.pre-commit.toml` — база плюс правила паролей; его использует pre-commit hook. Перед коммитом ставит более жёсткий фильтр на assignment'ы и docs/specs/stories.
+
+Сканер каталога по всему дереву по-прежнему не запускают: рядом лежат локальные `.env`. Проверка правил на синтетике: `npm run test:gitleaks` (только `test/gitleaks/fixtures`).
+
+`.gitleaksignore` — отпечатки для `gitleaks git` по истории (синтетические фикстуры и старые коммиты с примерами в plans/stories). На `gitleaks dir` по фикстурам не действует: `npm run test:gitleaks` по-прежнему ловит утечки в фикстурах.
+
+В **git worktree** (Orca и т.п.) простой `-v "$PWD":/repo` внутри контейнера часто даёт **0 commits scanned** (ложный зелёный). Для локальной проверки истории смонтируйте каталоги git:
+
+```bash
+GIT_COMMON=$(git rev-parse --git-common-dir)
+docker run --rm \
+  -v "$PWD:/repo" \
+  -v "$GIT_COMMON:$GIT_COMMON" \
+  -w /repo ghcr.io/gitleaks/gitleaks:v8.30.1 \
+  git --config .gitleaks.toml --redact --no-banner
+```
+
+`git rev-parse --git-dir` для worktree лежит под `--git-common-dir`; отдельный bind-mount на `$GIT_DIR` не делайте — он перекрывает каталог worktree внутри common и даёт **0 commits scanned**.
+
+Иначе полагайтесь на CI на полном клоне.
+
 Если gitleaks нашёл секрет в коммите, которого ещё нет на remote, пуш запрещён. Секрет убирают из истории до отправки и считают скомпрометированным.
 
 Дальше каждая задача идёт своей веткой. Перед пушем ветки повторяют пункты про индекс и проверки.
@@ -83,6 +107,7 @@ docker run --rm -v "$PWD":/repo -w /repo ghcr.io/gitleaks/gitleaks:v8.30.1 git -
 - Не читать `.env`, `infra/.env`, `infra/.env.prod` и `infra/safeline/.env`, чтобы «посмотреть, как устроено». Имена переменных берут из `infra/.env.example` и `infra/safeline/.env.example`.
 - Не выводить секреты в логи, тесты, фикстуры и ответы.
 - `service_role` не попадает в `NEXT_PUBLIC_*`, в браузерный бандл и в репозиторий.
+- В specs, plans, stories и прочий markdown не вставляют реальные пароли, JWT и ключи. Для примеров — только плейсхолдеры (`REPLACE_ME`, `changeme`, `***`). Ложное срабатывание снимают точечно (`# gitleaks:allow` или allowlist правила) с одной фразой в PR, почему это не секрет.
 
 ## Зависимости
 
