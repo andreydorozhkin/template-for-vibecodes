@@ -185,7 +185,8 @@ Browser renders
 - **SafeLine WAF** (v9.4.3+) in front
 - Backend services on private `UPSTREAM_ADDR`
 - Kong proxies to applications
-- SonarQube for code quality gates
+- Optional SonarQube (not on the default MVP server)
+- Radix Themes for UI composition
 
 See `docs/production.md` for details.
 
