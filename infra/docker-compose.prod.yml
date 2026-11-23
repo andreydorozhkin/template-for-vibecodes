@@ -3,10 +3,11 @@
 #     -f infra/docker-compose.yml -f infra/docker-compose.prod.yml up -d --build
 #
 # Only SafeLine (infra/safeline/compose.yaml, started separately by npm run waf:up) faces the
-# internet on host ports 80/443. Kong, the app, and SonarQube listen on UPSTREAM_ADDR, a
-# private dummy address (infra/scripts/upstream-addr.sh). SafeLine 9.4.3+ rejects 127.0.0.1
-# as an upstream. Postgres and Studio are not published. Docker-published ports bypass
-# ufw/firewalld, so nothing here may bind to 0.0.0.0.
+# internet on host ports 80/443. Kong and the app listen on UPSTREAM_ADDR, a private dummy
+# address (infra/scripts/upstream-addr.sh). SafeLine 9.4.3+ rejects 127.0.0.1 as an upstream.
+# Postgres and Studio are not published. SonarQube stays on the base `sonar` profile and is
+# not part of the default MVP server. Docker-published ports bypass ufw/firewalld, so nothing
+# here may bind to 0.0.0.0.
 
 services:
   db:
@@ -44,15 +45,3 @@ services:
   app:
     ports: !override
       - "${UPSTREAM_ADDR:?set UPSTREAM_ADDR in infra/.env.prod}:${APP_PORT:-3000}:3000"
-
-  # One shared server for CI and for everyone. The profile on the base file keeps it out of local `npm run up`.
-  sonar-db:
-    profiles: !reset []
-
-  sonarqube:
-    profiles: !reset []
-    environment:
-      # Overrides the Server base URL in the UI. GitHub decoration links use this value.
-      SONAR_CORE_SERVERBASEURL: ${SONAR_PUBLIC_URL:?set SONAR_PUBLIC_URL in infra/.env.prod}
-    ports: !override
-      - "${UPSTREAM_ADDR:?set UPSTREAM_ADDR in infra/.env.prod}:${SONAR_PORT:-9000}:9000"

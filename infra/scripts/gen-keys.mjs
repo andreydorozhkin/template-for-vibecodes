@@ -1,7 +1,8 @@
 // Dev:  node infra/scripts/gen-keys.mjs [--force]
 //       writes infra/.env and app/.env.local
-// Prod: node infra/scripts/gen-keys.mjs --prod --app-url https://app.example.com --api-url https://api.example.com --sonar-url https://sonar.example.com [--force]
+// Prod: node infra/scripts/gen-keys.mjs --prod --app-url https://app.example.com --api-url https://api.example.com [--sonar-url https://sonar.example.com] [--force]
 //       writes infra/.env.prod and infra/safeline/.env; SMTP_* stay empty and must be filled in by hand
+//       --sonar-url is optional; without it SONAR_PUBLIC_URL is omitted (Sonar is not on the default MVP server)
 import { createHmac, randomBytes } from "node:crypto";
 import { existsSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -31,9 +32,10 @@ for (const path of Object.values(targets)) {
   }
 }
 
-function httpsUrl(name) {
+function httpsUrl(name, { required = true } = {}) {
   const raw = args[name];
   if (!raw) {
+    if (!required) return "";
     console.error(`--${name} is required with --prod`);
     process.exit(1);
   }
@@ -75,7 +77,7 @@ const serviceRoleKey = signJwt("service_role");
 
 const appUrl = args.prod ? httpsUrl("app-url") : "http://localhost:3000";
 const apiUrl = args.prod ? httpsUrl("api-url") : "http://localhost:8000";
-const sonarUrl = args.prod ? httpsUrl("sonar-url") : "";
+const sonarUrl = args.prod ? httpsUrl("sonar-url", { required: false }) : "";
 
 const values = {
   POSTGRES_PASSWORD: secret(24),
@@ -132,7 +134,12 @@ const values = {
   SUPABASE_INTERNAL_URL: "http://kong:8000",
   APP_PORT: "3000",
   SONAR_PORT: "9000",
-  ...(args.prod ? { SONAR_PUBLIC_URL: sonarUrl, UPSTREAM_ADDR: "10.88.0.1" } : {}),
+  ...(args.prod
+    ? {
+        UPSTREAM_ADDR: "10.88.0.1",
+        ...(sonarUrl ? { SONAR_PUBLIC_URL: sonarUrl } : {}),
+      }
+    : {}),
 };
 
 function envFile(header, entries) {
