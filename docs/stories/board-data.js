@@ -29,5 +29,22 @@ const STORIES = [
       "Дано тот же раздел. Когда читают пояснение под таблицей. Тогда сказано, почему 4 GB тесны (Supabase + SafeLine + Next.js на одном хосте, риск OOM) и почему 8 GB — целевой размер; Sonar по-прежнему не на этом хосте.",
       "Дано раздел «Продакшен и деплой» в `README.md`. Когда выбирают VPS, не открывая `docs/production.md`. Тогда в README видна та же таблица (4 GB хрупко / 8 GB целевой MVP) и короткое пояснение про OOM; детали и SafeLine остаются в `docs/production.md`."
     ]
+  },
+  {
+    "id": "003",
+    "title": "Make init и сброс stories при новом сервисе",
+    "status": "done",
+    "branch": "feat/003-make-init-story-seed",
+    "pr": "https://github.com/andreydorozhkin/template-for-vibecodes/pull/3",
+    "external": "",
+    "file": "003-make-init-story-seed.md",
+    "preview": "Как человек, который заводит сервис из шаблона без агента или с агентом, я хочу одной командой поднять окружение и получить чистый бэклог с нейтральной заглушко",
+    "acceptance": [
+      "Дано чистый checkout шаблона без init. Когда смотрят `docs/stories/`. Тогда на месте stories каркаса (`001-save-note`, `002-…` и т.д.).",
+      "Дано дерево шаблона. Когда вызывают `make stories-seed` (или seed-скрипт). Тогда остаётся только `001-quick-start.md` со `status: done`, а `npm run stories:board` показывает одну карточку в done; `README.md` в папке не удалён.",
+      "Дано отсутствует Docker или Node. Когда `make check-deps`. Тогда ненулевой exit и сообщение, чего не хватает.",
+      "Дано уже посеянный бэклог. Когда seed вызывают снова. Тогда снова ровно одна заглушка, без дублей.",
+      "Дано разделы «Новый сервис из шаблона» в `AGENTS.md` и `README.md`. Когда читают шаги init. Тогда указан `make init` (keys + up + seed), а не только ручной `npm run keys` / `up`."
+    ]
   }
 ];
