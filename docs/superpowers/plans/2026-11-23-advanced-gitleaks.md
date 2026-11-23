@@ -76,7 +76,7 @@ external: ""
 ## Критерии приёмки
 
 1. Дано фикстура `docs` с `password = "Str0ng!Example99"`. Когда `gitleaks` с `.gitleaks.pre-commit.toml`. Тогда exit ≠ 0. Когда база `.gitleaks.toml`. Тогда этот кейс может пройти (парольные эвристики только в pre-commit).
-2. Дано фикстура с `POSTGRES_PASSWORD=SuperSecretPass1!` или JWT/`SERVICE_ROLE_KEY`. Когда база или pre-commit. Тогда exit ≠ 0.
+2. Дано фикстура в `test/gitleaks/fixtures/` с non-placeholder assignment для `POSTGRES_PASSWORD` или synthetic `SERVICE_ROLE_KEY`. Когда база или pre-commit. Тогда exit ≠ 0.
 3. Дано `password = "REPLACE_ME"` или проза про password policy без значения. Когда любой конфиг. Тогда exit 0.
 4. Дано pre-commit hook. Когда смотрим `.pre-commit-config.yaml`. Тогда `--config` указывает на `.gitleaks.pre-commit.toml`.
 5. Дано чистый шаблон без секретов в истории. Когда `gitleaks git --config .gitleaks.toml`. Тогда exit 0.
@@ -115,14 +115,10 @@ We discuss password policy and password managers without assigning values.
 `test/gitleaks/fixtures/template-env-leak/docs/keys.md`:
 
 ```markdown
-POSTGRES_PASSWORD=SuperSecretPass1!
+# see test/gitleaks/fixtures/template-env-leak/docs/keys.md (synthetic leak payload)
 ```
 
-`test/gitleaks/fixtures/jwt-leak/docs/jwt.md` — generate once with Node (do not use a production key). Put this exact synthetic JWT (header.payload + fake sig, valid shape for rule `jwt`):
-
-```markdown
-SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImV4cCI6MTk4MzgxMjk5Nn0.fixture_signature_not_real_padpadpadpad
-```
+`test/gitleaks/fixtures/jwt-leak/docs/jwt.md` — synthetic `SERVICE_ROLE_KEY` JWT-shaped assignment (header.payload + fake sig). Generate in Node; do not use a production key. Payload lives only in the fixture file, not in this plan.
 
 If default `jwt` rule rejects that signature charset, regenerate with:
 
@@ -230,7 +226,7 @@ npm run test:gitleaks
 
 Expected (with stub pre = base):
 - `password-leak` base: OK clean; pre: **FAIL** (got clean, expected leak)
-- `template-env-leak` base: **FAIL** (got clean, expected leak) — proves default rules miss `POSTGRES_PASSWORD=SuperSecretPass1!`
+- `template-env-leak` base: **FAIL** (got clean, expected leak) — proves default rules miss template-env assignments
 - `jwt-leak`: both OK leak (default `jwt` rule)
 - placeholders/prose: OK clean
 
@@ -260,7 +256,7 @@ EOF
 
 **Interfaces:**
 - Consumes: fixture `template-env-leak`, `jwt-leak`
-- Produces: base config that fails on `POSTGRES_PASSWORD=SuperSecretPass1!` and still passes placeholders; CI command unchanged (`--config .gitleaks.toml`)
+- Produces: base config that fails on `template-env-leak` fixture and still passes placeholders; CI command unchanged (`--config .gitleaks.toml`)
 
 - [ ] **Step 1: Replace `.gitleaks.toml` with:**
 
@@ -519,5 +515,5 @@ EOF
 ## Self-review notes
 
 - Stub `.gitleaks.pre-commit.toml` in Task 1 is intentional so the harness can run both columns before password rules exist.
-- Default `jwt` / `generic-api-key` already catch many keys; Task 2 exists because probe showed `POSTGRES_PASSWORD=SuperSecretPass1!` slips past defaults.
+- Default `jwt` / `generic-api-key` already catch many keys; Task 2 exists because probe showed template `POSTGRES_PASSWORD` assignments slip past defaults.
 - `gitleaks dir` has no `--no-git` flag; the fixture runner must not pass it.

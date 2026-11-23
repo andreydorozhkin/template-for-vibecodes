@@ -1,0 +1,15 @@
+# Synthetic gitleaks fixtures (intentional positives for npm run test:gitleaks).
+# Fingerprints from worktree-aware `gitleaks git` on this branch — not a path allowlist in .gitleaks.toml.
+ddc82289f76c0e4b1d4822c25981b7cb99da4f50:docs/stories/002-advanced-gitleaks.md:template-env-assignment:17
+ddc82289f76c0e4b1d4822c25981b7cb99da4f50:docs/stories/board-data.js:template-env-assignment:29
+ddc82289f76c0e4b1d4822c25981b7cb99da4f50:test/gitleaks/fixtures/jwt-leak/docs/jwt.md:jwt:1
+ddc82289f76c0e4b1d4822c25981b7cb99da4f50:test/gitleaks/fixtures/jwt-leak/docs/jwt.md:template-env-assignment:1
+ddc82289f76c0e4b1d4822c25981b7cb99da4f50:test/gitleaks/fixtures/template-env-leak/docs/keys.md:template-env-assignment:1
+# Historical plan/story prose (scrubbed in tree; fingerprints remain in git history).
+6cda1935d58568df1c5a00977ae7f3c1a4e18a9d:docs/superpowers/plans/2026-11-23-advanced-gitleaks.md:jwt:124
+6cda1935d58568df1c5a00977ae7f3c1a4e18a9d:docs/superpowers/plans/2026-11-23-advanced-gitleaks.md:template-env-assignment:79
+6cda1935d58568df1c5a00977ae7f3c1a4e18a9d:docs/superpowers/plans/2026-11-23-advanced-gitleaks.md:template-env-assignment:118
+6cda1935d58568df1c5a00977ae7f3c1a4e18a9d:docs/superpowers/plans/2026-11-23-advanced-gitleaks.md:template-env-assignment:124
+6cda1935d58568df1c5a00977ae7f3c1a4e18a9d:docs/superpowers/plans/2026-11-23-advanced-gitleaks.md:template-env-assignment:233
+6cda1935d58568df1c5a00977ae7f3c1a4e18a9d:docs/superpowers/plans/2026-11-23-advanced-gitleaks.md:template-env-assignment:263
+6cda1935d58568df1c5a00977ae7f3c1a4e18a9d:docs/superpowers/plans/2026-11-23-advanced-gitleaks.md:template-env-assignment:522

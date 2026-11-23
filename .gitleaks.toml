@@ -30,5 +30,11 @@ keywords = [
   description = "Placeholders and empty-looking tokens"
   regexTarget = "secret"
   regexes = [
-    '''(?i)^(REPLACE_ME|\*{3,}|changeme|change-me|your-.+|<.*>|xxx+|TODO|example|password|secret|to.?be.?set)$'''
+    '''(?i)^(REPLACE_ME|\*{3,}|changeme|change-me|your-.+|<.*>|xxx+|TODO|example|password|secret|to.?be.?set|fake_mail_password|fake_mail_user|actual_generated_password_value)$''',
+    '''^(secret|alnum)\(\d+\),?$''',
+    '''^(jwtSecret|anonKey|serviceRoleKey),?$''',
+    '''^randomBytes\(\d+\)\.toString\($''',
+    '''^Deno\.env\.get\($''',
+    '''^\$\{''',
+    '''^-supabaserealtime\}$''',
   ]
