@@ -13,4 +13,9 @@ ddc82289f76c0e4b1d4822c25981b7cb99da4f50:test/gitleaks/fixtures/template-env-lea
 6cda1935d58568df1c5a00977ae7f3c1a4e18a9d:docs/superpowers/plans/2026-11-23-advanced-gitleaks.md:template-env-assignment:124
 6cda1935d58568df1c5a00977ae7f3c1a4e18a9d:docs/superpowers/plans/2026-11-23-advanced-gitleaks.md:template-env-assignment:233
 6cda1935d58568df1c5a00977ae7f3c1a4e18a9d:docs/superpowers/plans/2026-11-23-advanced-gitleaks.md:template-env-assignment:263
-6cda1935d58568df1c5a00977ae7f3c1a4e18a9d:docs/superpowers/plans/2026-11-23-advanced-gitleaks.md:template-env-assignment:522
+6cda1935d58568df1c5a00977ae7f3c1a4e18a9d:docs/superpowers/plans/2026-11-23-advanced-gitleaks.md:template-env-assignment:5226232b040d7aee316ff4910c25815651da1a81175:.superpowers/sdd/final-fix-report.md:template-env-assignment:13
+6232b040d7aee316ff4910c25815651da1a81175:.superpowers/sdd/final-fix-report.md:template-env-assignment:25
+6232b040d7aee316ff4910c25815651da1a81175:.superpowers/sdd/final-fix-report.md:template-env-assignment:40
+6232b040d7aee316ff4910c25815651da1a81175:.superpowers/sdd/final-fix-report.md:template-env-assignment:50
+6232b040d7aee316ff4910c25815651da1a81175:.superpowers/sdd/final-fix-report.md:template-env-assignment:72
+6232b040d7aee316ff4910c25815651da1a81175:.superpowers/sdd/final-fix-report.md:template-env-assignment:73
