@@ -3,7 +3,7 @@ id: "003"
 title: "Make init и сброс stories при новом сервисе"
 status: in_progress
 branch: "feat/003-make-init-story-seed"
-pr: ""
+pr: "https://github.com/andreydorozhkin/template-for-vibecodes/pull/3"
 external: ""
 ---
 
