@@ -19,7 +19,7 @@
 
 - **Next.js** (App Router) + **Radix Themes** — экраны собирают из готовых компонентов (`docs/ui.md`)
 - **Self-hosted Supabase** — Auth, Postgres + RLS, Edge Functions (Deno); своей авторизации и SQL-логики приложения нет
-- **Docker Compose** — один `npm run up` для локалки; прод за SafeLine на одном VPS (~8 GB без Sonar)
+- **Docker Compose** — один `npm run up` для локалки; прод за SafeLine на одном VPS (см. ресурсы ниже)
 - **AGENTS.md** — как агенту завести сервис из шаблона и как вести задачи (story в `docs/stories/` → тесты → PR)
 - **Встроенный бэклог** — `docs/stories/*.md`, read-only борд без сервера: открыть [`docs/stories/board.html`](docs/stories/board.html)
 - **GitHub Actions** — одни и те же workflows и у каркаса, и у сервиса из шаблона: CI всегда; deploy только если заданы секреты
@@ -64,11 +64,19 @@ pre-commit install
 
 ## Продакшен и деплой
 
-Один Linux VPS: app + API за SafeLine. Sonar на этот хост не обязателен. Подробности: [docs/production.md](docs/production.md).
+Один Linux VPS: app + API за SafeLine. Sonar на этот хост не ставят — он опционален и тяжёлый. Подробности: [docs/production.md](docs/production.md).
+
+| | Встанет, но хрупко | Целевой MVP без Sonar |
+| --- | --- | --- |
+| CPU | 2 vCPU | 4 vCPU |
+| RAM | 4 GB | 8 GB |
+| Диск | 40 GB SSD | 40–80 GB SSD |
+
+На 4 GB контейнеры могут подняться, но Supabase + SafeLine + Next.js на одном хосте легко ловят OOM при пулле образов, билде и пиках. Бери **8 GB**, если выбираешь VPS «под шаблон».
 
 Первый подъём — вручную (`upstream-addr`, `keys:prod`, SMTP, `up:prod`, `waf:up`). Дальше merge в `main` может выкатывать `.github/workflows/deploy.yml`, если в секретах репозитория есть `DEPLOY_KEY` (base64), `DEPLOY_HOST`, `DEPLOY_USER`, `DEPLOY_PATH`. Без них job деплоя **пропускается**, CI остаётся зелёным — так же ведёт себя репозиторий самого каркаса.
 
-Опционально Sonar: `SONAR_HOST_URL` + `SONAR_TOKEN`; без них scan skip.
+Опционально Sonar (отдельная машина или `npm run up:sonar`): `SONAR_HOST_URL` + `SONAR_TOKEN`; без них scan skip.
 
 ## Задача агенту
 
