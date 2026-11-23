@@ -1,4 +1,4 @@
-# template-for-mvp
+# template-for-vibecodes
 
 **Public Beta** — каркас, из которого собирают MVP-сервис вместе с AI-агентом: зафиксированный стек, правила разработки, локальный Docker-стенд, UI-kit и простой выкат на VPS.
 
@@ -54,7 +54,7 @@ npm run up
 
 1. **Use this template** / clone в свой репозиторий.
 2. Агенту: «собери сервис на основе этого репозитория» — сценарий в `AGENTS.md`.
-3. Или вручную: заменить `template-for-mvp` в `package.json`, `sonar-project.properties`, `supabase/config.toml`, затем `keys` + `up`.
+3. Или вручную: заменить `template-for-vibecodes` в `package.json`, `sonar-project.properties`, `supabase/config.toml`, затем `keys` + `up`.
 
 ```bash
 pip install pre-commit   # или brew install pre-commit

@@ -1,5 +1,5 @@
 # Supabase CLI config. Local runtime for this template is infra/docker-compose.yml.
-project_id = "template-for-mvp"
+project_id = "template-for-vibecodes"
 
 [api]
 enabled = true

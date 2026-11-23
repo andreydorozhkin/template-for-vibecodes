@@ -152,7 +152,7 @@ SonarQube не входит в дефолтный MVP-сервер и не об�
 
 Если Sonar всё же поднимают и подключают к GitHub:
 
-1. Секреты `SONAR_HOST_URL` и `SONAR_TOKEN`; ключ проекта — `sonar.projectKey` (в новом сервисе не оставляют `template-for-mvp`).
+1. Секреты `SONAR_HOST_URL` и `SONAR_TOKEN`; ключ проекта — `sonar.projectKey` (в новом сервисе не оставляют `template-for-vibecodes`).
 2. GitHub App через Administration → DevOps platform integrations (нужен плагин ветвей).
 3. Сначала анализ ветки по умолчанию, иначе PR-декорация не появится. На PR CI передаёт `sonar.scm.revision`.
 

@@ -1,5 +1,5 @@
 {
-  "name": "template-for-mvp",
+  "name": "template-for-vibecodes",
   "private": true,
   "scripts": {
     "keys": "node infra/scripts/gen-keys.mjs",
