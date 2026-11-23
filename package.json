@@ -18,6 +18,7 @@
     "typecheck": "npm --prefix app run typecheck",
     "test": "npm --prefix app test",
     "test:functions": "docker run --rm -v ${PWD}/supabase/functions:/work -w /work denoland/deno:2.5.7 deno test --allow-env",
-    "stories:board": "node docs/stories/regen-board.mjs"
+    "stories:board": "node docs/stories/regen-board.mjs",
+    "test:stories": "node --test docs/stories/seed-for-new-service.test.mjs"
   }
 }
