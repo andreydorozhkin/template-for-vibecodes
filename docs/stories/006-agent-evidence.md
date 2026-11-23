@@ -3,7 +3,7 @@ id: "006"
 title: "Проверяемые результаты и уточнения по необходимости"
 status: done
 branch: "feat-extract-work-framework"
-pr: ""
+pr: "https://github.com/andreydorozhkin/template-for-vibecodes/pull/5"
 external: ""
 ---
 

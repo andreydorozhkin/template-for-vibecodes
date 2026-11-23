@@ -85,7 +85,7 @@ const STORIES = [
     "title": "Проверяемые результаты и уточнения по необходимости",
     "status": "done",
     "branch": "feat-extract-work-framework",
-    "pr": "",
+    "pr": "https://github.com/andreydorozhkin/template-for-vibecodes/pull/5",
     "external": "",
     "file": "006-agent-evidence.md",
     "preview": "Как человек, работающий с агентом, я хочу получать проверяемые результаты и только необходимые уточнения, чтобы делегировать задачи без лишних согласований.",
