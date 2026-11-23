@@ -1,6 +1,6 @@
 ## User story
 
-Ссылка на story или её текст. Шаблон: `docs/user-story-template.md`.
+Ссылка на файл в `docs/stories/<id>-<slug>.md` (или текст story). Шаблон: `docs/user-story-template.md`.
 
 ## Критерии приёмки
 
