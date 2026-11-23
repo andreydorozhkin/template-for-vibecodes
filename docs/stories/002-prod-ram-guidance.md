@@ -1,9 +1,9 @@
 ---
 id: "002"
 title: "Развести 4 GB и 8 GB в рекомендации для prod"
-status: in_progress
+status: done
 branch: "feat/002-prod-ram-guidance"
-pr: ""
+pr: "https://github.com/andreydorozhkin/template-for-vibecodes/pull/2"
 external: ""
 ---
 

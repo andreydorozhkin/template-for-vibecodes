@@ -18,9 +18,9 @@ const STORIES = [
   {
     "id": "002",
     "title": "Развести 4 GB и 8 GB в рекомендации для prod",
-    "status": "in_progress",
+    "status": "done",
     "branch": "feat/002-prod-ram-guidance",
-    "pr": "",
+    "pr": "https://github.com/andreydorozhkin/template-for-vibecodes/pull/2",
     "external": "",
     "file": "002-prod-ram-guidance.md",
     "preview": "Как человек, который выбирает VPS для MVP без Sonar, я хочу ясно видеть разницу между «встанет» и «комфортный целевой размер», чтобы не путать минимум с рекомен",
