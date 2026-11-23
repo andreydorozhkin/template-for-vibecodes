@@ -35,7 +35,7 @@ const STORIES = [
     "title": "Make init и сброс stories при новом сервисе",
     "status": "in_progress",
     "branch": "feat/003-make-init-story-seed",
-    "pr": "",
+    "pr": "https://github.com/andreydorozhkin/template-for-vibecodes/pull/3",
     "external": "",
     "file": "003-make-init-story-seed.md",
     "preview": "Как человек, который заводит сервис из шаблона без агента или с агентом, я хочу одной командой поднять окружение и получить чистый бэклог с нейтральной заглушко",
