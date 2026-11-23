@@ -76,7 +76,7 @@ docker run --rm -v "$PWD":/repo -w /repo ghcr.io/gitleaks/gitleaks:v8.30.1 git -
 
 Локальный список перед пушем собран в разделе «Перед пушем». CI повторяет его и добавляет проверку портов в compose. Job SonarQube **опционален**: без `SONAR_HOST_URL` и `SONAR_TOKEN` он пропускается, пайплайн остаётся зелёным. Дефолтный прод (`npm run up:prod`) Sonar не поднимает. Образ и профиль `sonar` остаются для отдельного хоста (`docs/production.md`).
 
-Deploy: push в `main` запускает `.github/workflows/deploy.yml` (SSH → `git pull` → compose `up -d --build`), если заданы секреты `DEPLOY_*`. SafeLine деплой не перезапускает.
+Deploy: push в `main` запускает `.github/workflows/deploy.yml` (SSH → `git pull` → compose `up -d --build`), если заданы секреты `DEPLOY_*`. Без них job пропускается (репозиторий шаблона и сервис до первого VPS остаются с зелёным CI). SafeLine деплой не перезапускает. Workflows одни и те же у каркаса и у сервиса из шаблона.
 
 ## Ограничения, которые не обходят
 

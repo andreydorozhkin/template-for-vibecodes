@@ -1,18 +1,37 @@
-# Шаблон сервиса (beta)
+# template-for-mvp
 
-Каркас MVP-сервиса: клонируешь → отдаёшь агенту → локальный стек и дальнейшая разработка по `AGENTS.md`. Beta: путь «из коробки» без обязательного Sonar на одном VPS и с простым SSH-деплоем.
+**Public Beta** — каркас, из которого собирают MVP-сервис вместе с AI-агентом: зафиксированный стек, правила разработки, локальный Docker-стенд, UI-kit и простой выкат на VPS.
 
-Стек зафиксирован: TypeScript, Next.js (App Router), Radix Themes, self-hosted Supabase. Серверная логика только в Edge Functions. В миграциях только таблицы и RLS. Авторизация только Supabase Auth.
+Не конструктор «любого» бэкенда и не PaaS. Это готовый репозиторий-шаблон: клонировал → поднял → описал задачу агенту → пилишь фичи ветками и PR.
 
-## Что нужно на машине
+## Статус
 
-- Docker с Compose v2
-- Node.js 24
-- Git
+| | |
+| --- | --- |
+| Стадия | **Public Beta** |
+| Готово | локальный стек, пример notes, Radix Themes, агентские правила, прод за SafeLine, CI, опциональный SSH-deploy |
+| Ещё нет / сознательно снаружи | автосоздание GitHub-репо, облачный Sonar по умолчанию, e2e SafeLine на каждом PR, магазин плагинов |
+| Обратная связь | issues в этом репозитории |
 
-Deno и gitleaks в систему ставить не нужно. Тесты функций гоняет `npm run test:functions` через контейнер `denoland/deno:2.5.7`. Секреты перед коммитом проверяет pre-commit.
+В бете стек и правила жёсткие специально: агент меньше «улучшает» архитектуру молча. Ломающие изменения в каркасе возможны до 1.0.
+
+## Что внутри
+
+- **Next.js** (App Router) + **Radix Themes** — экраны собирают из готовых компонентов (`docs/ui.md`)
+- **Self-hosted Supabase** — Auth, Postgres + RLS, Edge Functions (Deno); своей авторизации и SQL-логики приложения нет
+- **Docker Compose** — один `npm run up` для локалки; прод за SafeLine на одном VPS (~8 GB без Sonar)
+- **AGENTS.md** — как агенту завести сервис из шаблона и как вести задачи (story → тесты → PR)
+- **GitHub Actions** — одни и те же workflows и у каркаса, и у сервиса из шаблона: CI всегда; deploy только если заданы секреты
+
+## Для кого
+
+- Нужен свой небольшой сервис быстро, без выбора стека на неделю
+- Разработка идёт с агентом в Cursor / аналоге, а не только руками
+- Прод — свой Linux VPS, не «только Vercel»
 
 ## Быстрый старт
+
+Нужны Docker Compose v2, Node.js 24, Git.
 
 ```bash
 npm run keys
@@ -21,25 +40,21 @@ npm run up
 
 Открой http://localhost:3000/login, создай учётку, сохрани заметку.
 
-`npm run keys` создаёт `infra/.env` и `app/.env.local`. Повторный запуск не перезаписывает их. Заново: `node infra/scripts/gen-keys.mjs --force`. После смены ключей: `npm run down` и `docker volume rm` томов проекта `mvp`, иначе пароли ролей Postgres не совпадут.
-
 | Адрес | Что это |
 | --- | --- |
 | http://localhost:3000 | Приложение |
-| http://localhost:8000 | Kong: API Supabase и Studio |
+| http://localhost:8000 | Kong (API Supabase / Studio) |
 | localhost:5432 | Postgres |
 
-Все порты только на `127.0.0.1`. SonarQube локально не стартует; при необходимости: `npm run up:sonar` → http://localhost:9000 (`admin` / `admin`).
+Порты только на `127.0.0.1`. Остановка: `npm run down`. UI без пересборки контейнера: `npm --prefix app run dev`.
 
-Остановить: `npm run down`. Для UI без пересборки контейнера: `npm --prefix app run dev` (стек уже поднят).
-
-Интерфейс собирают из Radix Themes: [docs/ui.md](docs/ui.md).
+После `gen-keys --force` сбрось тома проекта `mvp`, иначе пароли ролей Postgres не совпадут.
 
 ## Новый сервис из шаблона
 
-1. Use this template / clone в свой репозиторий.
-2. Агенту: «собери сервис на основе этого репозитория» — сценарий в `AGENTS.md` (remote, rename, keys, up).
-3. Либо вручную: заменить `template-for-mvp` в `package.json`, `sonar-project.properties`, `supabase/config.toml`; `npm run keys` && `npm run up`.
+1. **Use this template** / clone в свой репозиторий.
+2. Агенту: «собери сервис на основе этого репозитория» — сценарий в `AGENTS.md`.
+3. Или вручную: заменить `template-for-mvp` в `package.json`, `sonar-project.properties`, `supabase/config.toml`, затем `keys` + `up`.
 
 ```bash
 pip install pre-commit   # или brew install pre-commit
@@ -48,60 +63,34 @@ pre-commit install
 
 ## Продакшен и деплой
 
-Один Linux VPS: app + API за SafeLine, без Sonar на том же хосте. Ориентир ~4 vCPU / 8 GB. Пошагово: [docs/production.md](docs/production.md).
+Один Linux VPS: app + API за SafeLine. Sonar на этот хост не обязателен. Подробности: [docs/production.md](docs/production.md).
 
-Первый раз на сервере вручную:
+Первый подъём — вручную (`upstream-addr`, `keys:prod`, SMTP, `up:prod`, `waf:up`). Дальше merge в `main` может выкатывать `.github/workflows/deploy.yml`, если в секретах репозитория есть `DEPLOY_KEY` (base64), `DEPLOY_HOST`, `DEPLOY_USER`, `DEPLOY_PATH`. Без них job деплоя **пропускается**, CI остаётся зелёным — так же ведёт себя репозиторий самого каркаса.
 
-```bash
-sudo sh infra/scripts/upstream-addr.sh 10.88.0.1
-npm run keys:prod -- --app-url https://app.example.com --api-url https://api.example.com
-# заполнить SMTP_* в infra/.env.prod
-npm run up:prod
-npm run waf:up
-```
+Опционально Sonar: `SONAR_HOST_URL` + `SONAR_TOKEN`; без них scan skip.
 
-Дальше обновления: merge в `main` → workflow `deploy` (SSH, `git pull`, compose `up -d --build`).
-
-Секреты GitHub Actions для деплоя: `DEPLOY_KEY` (SSH key в base64), `DEPLOY_HOST`, `DEPLOY_USER`, `DEPLOY_PATH`.
-
-Опционально Sonar: секреты `SONAR_HOST_URL` и `SONAR_TOKEN`. Без них CI зелёный, job sonarqube пропускается.
-
-Защита `main` (после первого зелёного CI): require PR; status checks `lint, typecheck, vitest`, `deno test`, `compose config, no public ports`, `gitleaks` (sonarqube — только если пользуетесь Sonar).
-
-## Первая задача агенту
+## Задача агенту
 
 ```text
 Прочитай AGENTS.md и docs/ui.md, стек не меняй.
-Если это новый сервис из шаблона — пройди раздел «Новый сервис из шаблона».
-Ветка: feat/short-name.
-Story: docs/stories/001.md.
+Если это новый сервис из шаблона — раздел «Новый сервис из шаблона».
+Ветка: feat/short-name. Story: docs/stories/001.md.
 Сначала тесты по критериям приёмки (покажи, что падают), потом реализация.
 Один PR. service_role не использовать. .env не читать и не коммитить.
 ```
 
-Пример notes уже в репозитории; новую задачу делают в новой ветке.
-
-Перед PR:
-
-```bash
-npm run lint
-npm run typecheck
-npm test
-npm run test:functions
-```
+Перед PR: `npm run lint`, `typecheck`, `test`, `test:functions`.
 
 ## Каталоги
 
 | Путь | Зачем |
 | --- | --- |
-| `AGENTS.md` | Правила агента (`CLAUDE.md` → тот же файл) |
+| `AGENTS.md` | Правила агента |
 | `docs/ui.md` | UI на Radix Themes |
-| `docs/production.md` | Прод, SafeLine, деплой, опциональный Sonar |
+| `docs/production.md` | Прод, SafeLine, деплой |
 | `app/` | Next.js |
-| `supabase/migrations` | Таблицы и RLS |
-| `supabase/functions` | Edge Functions |
-| `infra/` | Compose, Kong, ключи, SafeLine, опциональный Sonar |
-| `.github/workflows/ci.yml` | lint, tests, compose ports, gitleaks, optional Sonar |
-| `.github/workflows/deploy.yml` | SSH deploy на push в `main` |
+| `supabase/` | Миграции (RLS) и Edge Functions |
+| `infra/` | Compose, ключи, SafeLine, опциональный Sonar |
+| `.github/workflows/` | CI каркаса и сервиса; deploy по секретам |
 
-SQL в `infra/db/init` — платформа Supabase, не образец для миграций приложения.
+SQL в `infra/db/init` — bootstrap платформы Supabase, не образец для миграций приложения.
