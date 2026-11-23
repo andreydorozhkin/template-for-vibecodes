@@ -31,13 +31,13 @@ Docker публикует порты в обход ufw и firewalld. Поэто�
 
 Один Linux-сервер на приложение и SafeLine. `network_mode: host` у tengine работает только на Linux, на macOS прод-стек не запускают.
 
-| | Минимум, чтобы стек встал | MVP без Sonar |
+| | Встанет, но хрупко | Целевой MVP без Sonar |
 | --- | --- | --- |
-| CPU | 2–4 vCPU | 4 vCPU |
-| RAM | 4–8 GB | 8 GB |
+| CPU | 2 vCPU | 4 vCPU |
+| RAM | 4 GB | 8 GB |
 | Диск | 40 GB SSD | 40–80 GB SSD |
 
-На 4 GB стек тесный. На 8 GB без Sonar обычно хватает для MVP: Supabase, Next.js и SafeLine. SonarQube (живой RSS часто 2.5–3.5 GB) на тот же хост не кладут. Образы тяжёлые: Postgres Supabase около 1.3 GB, SafeLine около 2 GB.
+**4 GB** — нижняя граница «контейнеры поднялись»: один только self-hosted Supabase официально просит от 4 GB, а на том же хосте ещё SafeLine и Next.js. Пулл образов, `docker compose build` и пики нагрузки легко ловят OOM. **8 GB** — целевой размер VPS для MVP без Sonar: запас под Supabase (рекомендация upstream — 8 GB+), SafeLine и приложение. SonarQube (живой RSS часто 2.5–3.5 GB) на этот хост не кладут. Образы тяжёлые: Postgres Supabase около 1.3 GB, SafeLine около 2 GB.
 
 Два DNS-имени типа A на публичный IP сервера: `app.example.com`, `api.example.com`. Записи нужны до выпуска сертификата.
 
