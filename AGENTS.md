@@ -28,7 +28,7 @@ SQL в `infra/db/init/` — служебный bootstrap образа Supabase (
    - `project_id` в `supabase/config.toml`;
    - `name` в корневом `package.json`, строчными буквами.
    Пока в этих полях `template-for-vibecodes` и человек заводит новый сервис, а не правит сам каркас, пуш в новый remote запрещён.
-3. `npm run keys` → `npm run up`. Проверить, что открываются login и notes на http://localhost:3000. После смены ключей: `npm run down` и удаление томов проекта `mvp`, иначе пароли ролей Postgres не совпадут.
+3. `make init` (check-deps → `npm run keys` → `npm run up` → сброс `docs/stories/` до нейтральной заглушки `001-quick-start.md` и пересборка борда). Проверить login и notes на http://localhost:3000. Бэклог каркаса в новый сервис не переносят: seed удаляет `NNN-*.md` шаблона. После смены ключей: `npm run down` и удаление томов проекта `mvp`, иначе пароли ролей Postgres не совпадут. Только сброс бэклога без подъёма: `make stories-seed`.
 4. Напомнить человеку, что агент не делает в GitHub: секреты деплоя (`DEPLOY_KEY`, `DEPLOY_HOST`, `DEPLOY_USER`, `DEPLOY_PATH`), опционально `SONAR_*`, защита ветки `main`, первый ручной подъём сервера (`docs/production.md`). Не сообщать, что секреты уже стоят.
 5. Дальше обычный цикл: story в `docs/stories/` → ветка → тесты → реализация → PR.
 

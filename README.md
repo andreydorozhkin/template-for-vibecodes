@@ -34,6 +34,8 @@
 
 Нужны Docker Compose v2, Node.js 24, Git.
 
+Для **нового сервиса из шаблона** удобнее `make init` — поднимает стек и сбрасывает бэклог до заглушки `001-quick-start.md`. Работа **над самим каркасом** без сброса stories: минимальный путь `npm run keys` → `npm run up`.
+
 ```bash
 npm run keys
 npm run up
@@ -55,7 +57,11 @@ npm run up
 
 1. **Use this template** / clone в свой репозиторий.
 2. Агенту: «собери сервис на основе этого репозитория» — сценарий в `AGENTS.md`.
-3. Или вручную: заменить `template-for-vibecodes` в `package.json`, `sonar-project.properties`, `supabase/config.toml`, затем `keys` + `up`.
+3. Или вручную: заменить `template-for-vibecodes` в `package.json`, `sonar-project.properties`, `supabase/config.toml`, затем `make init` (deps, keys, up, сброс бэклога до `001-quick-start.md`).
+
+```bash
+make init
+```
 
 ```bash
 pip install pre-commit   # или brew install pre-commit
