@@ -20,7 +20,8 @@
 - **Next.js** (App Router) + **Radix Themes** — экраны собирают из готовых компонентов (`docs/ui.md`)
 - **Self-hosted Supabase** — Auth, Postgres + RLS, Edge Functions (Deno); своей авторизации и SQL-логики приложения нет
 - **Docker Compose** — один `npm run up` для локалки; прод за SafeLine на одном VPS (~8 GB без Sonar)
-- **AGENTS.md** — как агенту завести сервис из шаблона и как вести задачи (story → тесты → PR)
+- **AGENTS.md** — как агенту завести сервис из шаблона и как вести задачи (story в `docs/stories/` → тесты → PR)
+- **Встроенный бэклог** — `docs/stories/*.md`, read-only борд без сервера: открыть [`docs/stories/board.html`](docs/stories/board.html)
 - **GitHub Actions** — одни и те же workflows и у каркаса, и у сервиса из шаблона: CI всегда; deploy только если заданы секреты
 
 ## Для кого
@@ -74,18 +75,19 @@ pre-commit install
 ```text
 Прочитай AGENTS.md и docs/ui.md, стек не меняй.
 Если это новый сервис из шаблона — раздел «Новый сервис из шаблона».
-Ветка: feat/short-name. Story: docs/stories/001.md.
+Ветка: feat/001-short-name. Story: docs/stories/001-short-name.md.
 Сначала тесты по критериям приёмки (покажи, что падают), потом реализация.
 Один PR. service_role не использовать. .env не читать и не коммитить.
 ```
 
-Перед PR: `npm run lint`, `typecheck`, `test`, `test:functions`.
+Перед PR: `npm run lint`, `typecheck`, `test`, `test:functions`. Бэклог и борд: `docs/stories/` (после правок story — `npm run stories:board`).
 
 ## Каталоги
 
 | Путь | Зачем |
 | --- | --- |
 | `AGENTS.md` | Правила агента |
+| `docs/stories/` | Встроенный бэклог и `board.html` |
 | `docs/ui.md` | UI на Radix Themes |
 | `docs/production.md` | Прод, SafeLine, деплой |
 | `app/` | Next.js |

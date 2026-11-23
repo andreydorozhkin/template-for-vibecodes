@@ -17,6 +17,7 @@
     "lint": "npm --prefix app run lint",
     "typecheck": "npm --prefix app run typecheck",
     "test": "npm --prefix app test",
-    "test:functions": "docker run --rm -v ${PWD}/supabase/functions:/work -w /work denoland/deno:2.5.7 deno test --allow-env"
+    "test:functions": "docker run --rm -v ${PWD}/supabase/functions:/work -w /work denoland/deno:2.5.7 deno test --allow-env",
+    "stories:board": "node docs/stories/regen-board.mjs"
   }
 }

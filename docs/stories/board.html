@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stories board</title>
+    <style>
+      :root {
+        --bg: #eef2f6;
+        --ink: #15202b;
+        --muted: #5b6b7c;
+        --col: #f7fafc;
+        --line: #d5dee8;
+        --backlog: #d9e6f5;
+        --progress: #dde8d9;
+        --done: #e2e0ef;
+        --card: #ffffff;
+        --accent: #1d4f91;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Source Sans 3", "Segoe UI", "Helvetica Neue", sans-serif;
+        color: var(--ink);
+        background:
+          linear-gradient(165deg, #e7eef6 0%, transparent 42%),
+          linear-gradient(345deg, #e4ebe4 0%, transparent 38%),
+          var(--bg);
+      }
+      header {
+        padding: 1.75rem 1.5rem 0.5rem;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      header h1 {
+        margin: 0;
+        font-size: clamp(1.6rem, 3vw, 2.1rem);
+        letter-spacing: -0.02em;
+      }
+      header p {
+        margin: 0.4rem 0 0;
+        color: var(--muted);
+        font-size: 0.95rem;
+        max-width: 42rem;
+      }
+      header code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 0.85em;
+        background: rgba(0, 0, 0, 0.05);
+        padding: 0.1em 0.35em;
+        border-radius: 3px;
+      }
+      .board {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1rem;
+        padding: 1.25rem 1.5rem 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      @media (max-width: 860px) {
+        .board {
+          grid-template-columns: 1fr;
+        }
+      }
+      .column {
+        background: var(--col);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        min-height: 12rem;
+        display: flex;
+        flex-direction: column;
+      }
+      .column-head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.5rem;
+        padding: 0.85rem 1rem;
+        border-bottom: 1px solid var(--line);
+        border-radius: 10px 10px 0 0;
+        font-weight: 600;
+      }
+      .column[data-status="backlog"] .column-head {
+        background: var(--backlog);
+      }
+      .column[data-status="in_progress"] .column-head {
+        background: var(--progress);
+      }
+      .column[data-status="done"] .column-head {
+        background: var(--done);
+      }
+      .count {
+        font-size: 0.8rem;
+        color: var(--muted);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      }
+      .cards {
+        padding: 0.75rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.65rem;
+        flex: 1;
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 0.75rem 0.85rem;
+        text-align: left;
+        cursor: pointer;
+        width: 100%;
+        font: inherit;
+        color: inherit;
+        transition: border-color 0.15s ease, transform 0.15s ease;
+      }
+      .card:hover,
+      .card:focus-visible {
+        border-color: var(--accent);
+        outline: none;
+        transform: translateY(-1px);
+      }
+      .card.open {
+        border-color: var(--accent);
+      }
+      .card-id {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 0.75rem;
+        color: var(--accent);
+      }
+      .card-title {
+        margin: 0.25rem 0 0;
+        font-size: 1.05rem;
+        font-weight: 600;
+      }
+      .card-preview {
+        margin: 0.45rem 0 0;
+        font-size: 0.9rem;
+        color: var(--muted);
+        line-height: 1.35;
+      }
+      .card-meta {
+        margin-top: 0.55rem;
+        font-size: 0.75rem;
+        color: var(--muted);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      }
+      .details {
+        display: none;
+        margin-top: 0.7rem;
+        padding-top: 0.65rem;
+        border-top: 1px dashed var(--line);
+        font-size: 0.88rem;
+        line-height: 1.4;
+      }
+      .card.open .details {
+        display: block;
+      }
+      .details ol {
+        margin: 0.35rem 0 0;
+        padding-left: 1.15rem;
+      }
+      .details li + li {
+        margin-top: 0.25rem;
+      }
+      .empty {
+        color: var(--muted);
+        font-size: 0.9rem;
+        padding: 0.5rem 0.25rem;
+      }
+      .hint {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1.5rem 2rem;
+        color: var(--muted);
+        font-size: 0.85rem;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Stories</h1>
+      <p>
+        Встроенный бэклог из <code>docs/stories/*.md</code>. Только просмотр — статусы
+        меняют агент или человек в файлах, затем <code>npm run stories:board</code>.
+      </p>
+    </header>
+    <main class="board" id="board" aria-live="polite"></main>
+    <p class="hint">
+      Нет карточек? Проверь, что рядом лежит актуальный <code>board-data.js</code>, и
+      открой этот HTML с диска (не через чужой origin).
+    </p>
+    <script src="board-data.js"></script>
+    <script>
+      (function () {
+        var columns = [
+          { status: "backlog", label: "Backlog" },
+          { status: "in_progress", label: "In progress" },
+          { status: "done", label: "Done" },
+        ];
+        var stories = typeof STORIES !== "undefined" ? STORIES : [];
+        var root = document.getElementById("board");
+
+        function esc(s) {
+          return String(s)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;");
+        }
+
+        columns.forEach(function (col) {
+          var items = stories.filter(function (s) {
+            return s.status === col.status;
+          });
+          var section = document.createElement("section");
+          section.className = "column";
+          section.dataset.status = col.status;
+          section.innerHTML =
+            '<div class="column-head"><span>' +
+            esc(col.label) +
+            '</span><span class="count">' +
+            items.length +
+            "</span></div>";
+          var list = document.createElement("div");
+          list.className = "cards";
+          if (!items.length) {
+            list.innerHTML = '<p class="empty">Пусто</p>';
+          } else {
+            items.forEach(function (story) {
+              var btn = document.createElement("button");
+              btn.type = "button";
+              btn.className = "card";
+              var metaBits = [];
+              if (story.file) metaBits.push(story.file);
+              if (story.branch) metaBits.push(story.branch);
+              if (story.pr) metaBits.push(story.pr);
+              var acceptance = (story.acceptance || [])
+                .map(function (a) {
+                  return "<li>" + esc(a) + "</li>";
+                })
+                .join("");
+              btn.innerHTML =
+                '<div class="card-id">#' +
+                esc(story.id) +
+                "</div>" +
+                '<div class="card-title">' +
+                esc(story.title) +
+                "</div>" +
+                (story.preview
+                  ? '<p class="card-preview">' + esc(story.preview) + "</p>"
+                  : "") +
+                (metaBits.length
+                  ? '<div class="card-meta">' + esc(metaBits.join(" · ")) + "</div>"
+                  : "") +
+                '<div class="details">' +
+                (acceptance
+                  ? "<strong>Критерии</strong><ol>" + acceptance + "</ol>"
+                  : "<em>Критериев в файле не найдено</em>") +
+                (story.external
+                  ? '<p class="card-meta">external: ' + esc(story.external) + "</p>"
+                  : "") +
+                "</div>";
+              btn.addEventListener("click", function () {
+                btn.classList.toggle("open");
+              });
+              list.appendChild(btn);
+            });
+          }
+          section.appendChild(list);
+          root.appendChild(section);
+        });
+      })();
+    </script>
+  </body>
+</html>
