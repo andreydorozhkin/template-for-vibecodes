@@ -46,5 +46,22 @@ const STORIES = [
       "Дано уже посеянный бэклог. Когда seed вызывают снова. Тогда снова ровно одна заглушка, без дублей.",
       "Дано разделы «Новый сервис из шаблона» в `AGENTS.md` и `README.md`. Когда читают шаги init. Тогда указан `make init` (keys + up + seed), а не только ручной `npm run keys` / `up`."
     ]
+  },
+  {
+    "id": "004",
+    "title": "Строже gitleaks для вайбкода",
+    "status": "in_progress",
+    "branch": "feat-gitleaks-docs-skill",
+    "pr": "",
+    "external": "",
+    "file": "004-advanced-gitleaks.md",
+    "preview": "Как разработчик и агент на шаблоне, я хочу чтобы gitleaks ловил секреты шаблона в CI и пароли в pre-commit (включая docs/specs/stories), чтобы учётные данные не",
+    "acceptance": [
+      "Дано фикстура `docs` с `password = \"Str0ng!Example99\"`. Когда `gitleaks` с `.gitleaks.pre-commit.toml`. Тогда exit ≠ 0. Когда база `.gitleaks.toml`. Тогда этот кейс может пройти (парольные эвристики только в pre-commit).",
+      "Дано фикстура с `POSTGRES_PASSWORD=SuperSecretPass1!` или JWT/`SERVICE_ROLE_KEY`. Когда база или pre-commit. Тогда exit ≠ 0.",
+      "Дано `password = \"REPLACE_ME\"` или проза про password policy без значения. Когда любой конфиг. Тогда exit 0.",
+      "Дано pre-commit hook. Когда смотрим `.pre-commit-config.yaml`. Тогда `--config` указывает на `.gitleaks.pre-commit.toml`.",
+      "Дано чистый шаблон без секретов в истории. Когда `gitleaks git --config .gitleaks.toml`. Тогда exit 0."
+    ]
   }
 ];
