@@ -107,10 +107,10 @@ args: ["--config", ".gitleaks.pre-commit.toml"]
 
 | Фикстура | Ожидание |
 | --- | --- |
-| docs-файл с `password = "Str0ng!Example"` | pre-commit config: fail; base: может не ловить |
+| фикстура `password-leak` | pre-commit config: fail; base: может не ловить |
 | docs-файл с JWT/`service_role`-подобной строкой | оба конфига: fail |
 | копия пустого `.env.example` под allowlist-путём или проверка корневого `.env.example` через `gitleaks git` | оба: pass |
-| docs с `password = "REPLACE_ME"` | оба: pass |
+| фикстура `password-placeholder` | оба: pass |
 | обычный markdown про «password policy» без значений | оба: pass |
 
 Команда проверки при реализации (ориентир):

@@ -21,7 +21,16 @@ keywords = [
   [[rules.allowlists]]
   regexTarget = "secret"
   regexes = [
-    '''(?i)^(REPLACE_ME|\*{3,}|changeme|change-me|your-.+|<.*>|xxx+|TODO|example|password|secret|to.?be.?set)$'''
+    '''(?i)^(REPLACE_ME|\*{3,}|changeme|change-me|your-.+|<.*>|xxx+|TODO|example|password|secret|to.?be.?set|fake_mail_password|fake_mail_user|actual_generated_password_value)$''',
+    '''^(secret|alnum)\(\d+\),?$''',
+    '''^(jwtSecret|anonKey|serviceRoleKey),?$''',
+    '''^randomBytes\(\d+\)\.toString\($''',
+    '''^Deno\.env\.get\($''',
+    '''^\$\{[A-Z0-9_]+\}$''',
+    '''^\$\{[A-Z0-9_]+:\?[^'"#]*''',
+    '''^\$\{[A-Z0-9_]+:-(?:(?i)fake_mail_password|fake_mail_user|[a-z_][a-z0-9_]*)\}$''',
+    '''^\$\{[A-Z0-9_]+:-\}$''',
+    '''.*\(''',
   ]
 
 [[rules]]
@@ -43,5 +52,10 @@ keywords = [
   [[rules.allowlists]]
   regexTarget = "secret"
   regexes = [
-    '''(?i)^(REPLACE_ME|\*{3,}|changeme|change-me|your-.+|<.*>|xxx+|TODO|example|password|secret|to.?be.?set)$'''
+    '''(?i)^(REPLACE_ME|\*{3,}|changeme|change-me|your-.+|<.*>|xxx+|TODO|example|password|secret|to.?be.?set|fake_mail_password|fake_mail_user)$''',
+    '''^\$\{[A-Z0-9_]+\}$''',
+    '''^\$\{[A-Z0-9_]+:\?[^'"#]*''',
+    '''^\$\{[A-Z0-9_]+:-(?:(?i)fake_mail_password|fake_mail_user|[a-z_][a-z0-9_]*)\}$''',
+    '''^\$\{[A-Z0-9_]+:-\}$''',
+    '''.*\(''',
   ]

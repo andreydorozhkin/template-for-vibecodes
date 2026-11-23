@@ -5,6 +5,7 @@ ddc82289f76c0e4b1d4822c25981b7cb99da4f50:docs/stories/board-data.js:template-env
 ddc82289f76c0e4b1d4822c25981b7cb99da4f50:test/gitleaks/fixtures/jwt-leak/docs/jwt.md:jwt:1
 ddc82289f76c0e4b1d4822c25981b7cb99da4f50:test/gitleaks/fixtures/jwt-leak/docs/jwt.md:template-env-assignment:1
 ddc82289f76c0e4b1d4822c25981b7cb99da4f50:test/gitleaks/fixtures/template-env-leak/docs/keys.md:template-env-assignment:1
+67027c797fbc53fb46f883812ec13fe2a3800ad6:infra/scripts/gen-keys.mjs:template-env-assignment:111
 # Historical plan/story prose (scrubbed in tree; fingerprints remain in git history).
 6cda1935d58568df1c5a00977ae7f3c1a4e18a9d:docs/superpowers/plans/2026-11-23-advanced-gitleaks.md:jwt:124
 6cda1935d58568df1c5a00977ae7f3c1a4e18a9d:docs/superpowers/plans/2026-11-23-advanced-gitleaks.md:template-env-assignment:79
