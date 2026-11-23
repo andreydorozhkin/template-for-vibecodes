@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Button, Callout, Flex, Text, TextArea } from "@radix-ui/themes";
 
 export function noteBodyError(body: string): string | null {
   if (body.trim() === "") {
@@ -13,25 +14,31 @@ export function NoteForm({ action }: { action: (formData: FormData) => void | Pr
   const [error, setError] = useState<string | null>(null);
 
   return (
-    <form
-      action={async (formData) => {
-        const message = noteBodyError(String(formData.get("body") ?? ""));
-        if (message) {
-          setError(message);
-          return;
-        }
-        setError(null);
-        await action(formData);
-      }}
-    >
-      <label htmlFor="body">Новая заметка</label>
-      <textarea id="body" name="body" />
-      {error ? (
-        <p className="error" role="alert">
-          {error}
-        </p>
-      ) : null}
-      <button type="submit">Сохранить</button>
-    </form>
+    <Flex direction="column" gap="3" asChild>
+      <form
+        action={async (formData) => {
+          const message = noteBodyError(String(formData.get("body") ?? ""));
+          if (message) {
+            setError(message);
+            return;
+          }
+          setError(null);
+          await action(formData);
+        }}
+      >
+        <Flex direction="column" gap="2">
+          <Text as="label" size="2" weight="medium" htmlFor="body">
+            Новая заметка
+          </Text>
+          <TextArea id="body" name="body" rows={4} />
+        </Flex>
+        {error ? (
+          <Callout.Root color="red" role="alert">
+            <Callout.Text>{error}</Callout.Text>
+          </Callout.Root>
+        ) : null}
+        <Button type="submit">Сохранить</Button>
+      </form>
+    </Flex>
   );
 }

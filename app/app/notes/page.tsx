@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { Button, Card, Container, Flex, Heading, Text } from "@radix-ui/themes";
 import { NoteForm } from "@/components/note-form";
 import { createClient } from "@/lib/supabase/server";
 import { createNoteAction } from "./actions";
@@ -18,25 +19,42 @@ export default async function NotesPage() {
     .order("created_at", { ascending: false });
 
   return (
-    <main>
-      <div className="row">
-        <h1>Мои заметки</h1>
-        <form action="/auth/signout" method="post">
-          <button type="submit">Выйти</button>
-        </form>
-      </div>
-      <p className="lede">{userData.user.email}</p>
-      <NoteForm action={createNoteAction} />
-      <ul className="notes">
-        {(notes ?? []).map((note) => (
-          <li key={note.id}>
-            {note.body}
-            <time dateTime={note.created_at}>
-              {new Date(note.created_at).toLocaleString("ru-RU")}
-            </time>
-          </li>
-        ))}
-      </ul>
-    </main>
+    <Container size="2" py="9" px="4">
+      <Flex direction="column" gap="5">
+        <Flex justify="between" align="center" gap="3">
+          <Heading size="8">Мои заметки</Heading>
+          <form action="/auth/signout" method="post">
+            <Button type="submit" variant="soft" color="gray">
+              Выйти
+            </Button>
+          </form>
+        </Flex>
+        <Text color="gray" size="3">
+          {userData.user.email}
+        </Text>
+        <NoteForm action={createNoteAction} />
+        <Flex direction="column" gap="3" asChild>
+          <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
+            {(notes ?? []).map((note) => (
+              <li key={note.id}>
+                <Card>
+                  <Text as="p" size="3">
+                    {note.body}
+                  </Text>
+                  <Text as="p" size="1" color="gray" mt="2">
+                    <time dateTime={note.created_at}>{new Date(note.created_at).toLocaleString("ru-RU")}</time>
+                  </Text>
+                </Card>
+              </li>
+            ))}
+          </ul>
+        </Flex>
+        {!notes?.length ? (
+          <Text color="gray" size="2">
+            Пока пусто — напишите первую заметку выше.
+          </Text>
+        ) : null}
+      </Flex>
+    </Container>
   );
 }
