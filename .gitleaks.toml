@@ -1,4 +1,4 @@
-title = "template gitleaks config"
+title = "template gitleaks config (CI / agents)"
 
 [extend]
 useDefault = true
@@ -6,3 +6,41 @@ useDefault = true
 [allowlist]
 description = "Example env files list names and never values."
 paths = ['''(^|/)\.env\.example$''']
+
+[[rules]]
+id = "template-env-assignment"
+description = "Secret-bearing template env var assigned a non-placeholder value"
+regex = '''(?i)(?:POSTGRES_PASSWORD|JWT_SECRET|ANON_KEY|SERVICE_ROLE_KEY|DASHBOARD_PASSWORD|SECRET_KEY_BASE|REALTIME_DB_ENC_KEY|PG_META_CRYPTO_KEY|S3_PROTOCOL_ACCESS_KEY_SECRET|SMTP_PASS|SONAR_DB_PASSWORD|OPENAI_API_KEY|DEPLOY_KEY|SUPABASE_SERVICE_ROLE_KEY)\s*[:=]\s*['"]?([^\s'"#]{8,})['"]?'''
+secretGroup = 1
+entropy = 3.0
+keywords = [
+  "postgres_password",
+  "jwt_secret",
+  "anon_key",
+  "service_role",
+  "dashboard_password",
+  "secret_key_base",
+  "realtime_db_enc_key",
+  "pg_meta_crypto_key",
+  "s3_protocol_access_key_secret",
+  "smtp_pass",
+  "sonar_db_password",
+  "openai_api_key",
+  "deploy_key",
+]
+
+  [[rules.allowlists]]
+  description = "Placeholders and empty-looking tokens"
+  regexTarget = "secret"
+  regexes = [
+    '''^\$\{[A-Z0-9_]+\}$''',
+    '''^\$\{[A-Z0-9_]+:\?[a-z]*$''',
+    '''^\$\{[A-Z0-9_]+:-(?:fake_mail_password|fake_mail_user|[a-z_][a-z0-9_]*)\}$''',
+    '''^\$\{[A-Z0-9_]+:-\}$''',
+    '''^-supabaserealtime\}$''',
+    '''(?i)^(REPLACE_ME|\*{3,}|changeme|change-me|your-.+|<.*>|xxx+|TODO|example|password|secret|to.?be.?set|fake_mail_password|fake_mail_user|actual_generated_password_value)$''',
+    '''^(secret|alnum)\(\d+\),?$''',
+    '''^(jwtSecret|anonKey|serviceRoleKey),?$''',
+    '''^randomBytes\(\d+\)\.toString\($''',
+    '''^Deno\.env\.get\($''',
+  ]

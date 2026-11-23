@@ -46,5 +46,38 @@ const STORIES = [
       "Дано уже посеянный бэклог. Когда seed вызывают снова. Тогда снова ровно одна заглушка, без дублей.",
       "Дано разделы «Новый сервис из шаблона» в `AGENTS.md` и `README.md`. Когда читают шаги init. Тогда указан `make init` (keys + up + seed), а не только ручной `npm run keys` / `up`."
     ]
+  },
+  {
+    "id": "004",
+    "title": "Строже gitleaks для вайбкода",
+    "status": "done",
+    "branch": "feat-gitleaks-docs-skill",
+    "pr": "",
+    "external": "",
+    "file": "004-advanced-gitleaks.md",
+    "preview": "Как разработчик и агент на шаблоне, я хочу чтобы gitleaks ловил секреты шаблона в CI и пароли в pre-commit (включая docs/specs/stories), чтобы учётные данные не",
+    "acceptance": [
+      "Дано каталог `test/gitleaks/fixtures/password-leak` (synthetic docs password). Когда `gitleaks` с `.gitleaks.pre-commit.toml`. Тогда exit ≠ 0. Когда база `.gitleaks.toml`. Тогда этот кейс может пройти (парольные эвристики только в pre-commit).",
+      "Дано фикстура в `test/gitleaks/fixtures/` с non-placeholder assignment для `POSTGRES_PASSWORD` или synthetic `SERVICE_ROLE_KEY` (см. `template-env-leak` / `jwt-leak`). Когда база или pre-commit. Тогда exit ≠ 0.",
+      "Дано фикстуры `password-placeholder` или `password-prose`. Когда любой конфиг. Тогда exit 0.",
+      "Дано pre-commit hook. Когда смотрим `.pre-commit-config.yaml`. Тогда `--config` указывает на `.gitleaks.pre-commit.toml`.",
+      "Дано чистый шаблон без секретов в истории. Когда `gitleaks git --config .gitleaks.toml`. Тогда exit 0."
+    ]
+  },
+  {
+    "id": "005",
+    "title": "Номера stories без коллизий на параллельных ветках",
+    "status": "backlog",
+    "branch": "",
+    "pr": "",
+    "external": "",
+    "file": "005-story-id-merge-safe.md",
+    "preview": "Как человек или агент с параллельными ветками, я хочу чтобы встроенный трекер `docs/stories/` не ломал rebase/merge из‑за пересечения номеров и снимка `board-da",
+    "acceptance": [
+      "Дано две параллельные ветки, каждая добавляет новую story. Когда обе мержат в `main`. Тогда id не пересекаются без ручного переименования (правило выделения id или проверка в CI).",
+      "Дано конфликт только в `board-data.js` при rebase/merge. Когда следуют процессу репозитория. Тогда конфликт либо не возникает (снимок не в git / генерится в CI), либо снимается одной командой без ручного склеивания JSON.",
+      "Дано агент создаёт story. Когда смотрит README/`AGENTS.md`. Тогда явно сказано, как выбрать следующий id (в т.ч. с учётом `origin/main`, не только локального каталога).",
+      "Дано PR с новой story. Когда CI. Тогда падает при дубликате id или двух файлов с одним префиксом номера."
+    ]
   }
 ];

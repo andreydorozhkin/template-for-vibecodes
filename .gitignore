@@ -33,3 +33,6 @@ infra/volumes/
 coverage/
 *.tsbuildinfo
 .DS_Store
+
+# Local agent scratch (task briefs, review diffs)
+.superpowers/

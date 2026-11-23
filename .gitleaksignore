@@ -1,0 +1,40 @@
+# Synthetic gitleaks fixtures and historical doc prose (intentional / scrubbed).
+# Fingerprints from worktree-aware `gitleaks git` after rebase onto origin/main.
+# Not a path allowlist in .gitleaks.toml — `gitleaks dir` on fixtures still detects.
+82abc36f5e373ad31aa6279c83c7c3e86f79fdee:.superpowers/sdd/final-fix-report.md:template-env-assignment:13
+82abc36f5e373ad31aa6279c83c7c3e86f79fdee:.superpowers/sdd/final-fix-report.md:template-env-assignment:25
+82abc36f5e373ad31aa6279c83c7c3e86f79fdee:.superpowers/sdd/final-fix-report.md:template-env-assignment:40
+82abc36f5e373ad31aa6279c83c7c3e86f79fdee:.superpowers/sdd/final-fix-report.md:template-env-assignment:50
+82abc36f5e373ad31aa6279c83c7c3e86f79fdee:.superpowers/sdd/final-fix-report.md:template-env-assignment:72
+82abc36f5e373ad31aa6279c83c7c3e86f79fdee:.superpowers/sdd/final-fix-report.md:template-env-assignment:73
+8938ba0e112b82ff15ae2afb0ece93546e8c9a5a:docs/stories/004-advanced-gitleaks.md:template-env-assignment:17
+8938ba0e112b82ff15ae2afb0ece93546e8c9a5a:docs/stories/board-data.js:template-env-assignment:61
+8938ba0e112b82ff15ae2afb0ece93546e8c9a5a:test/gitleaks/fixtures/jwt-leak/docs/jwt.md:jwt:1
+8938ba0e112b82ff15ae2afb0ece93546e8c9a5a:test/gitleaks/fixtures/jwt-leak/docs/jwt.md:template-env-assignment:1
+8938ba0e112b82ff15ae2afb0ece93546e8c9a5a:test/gitleaks/fixtures/template-env-leak/docs/keys.md:template-env-assignment:1
+d79e4533a7a482d4b7121b14bdac7163d4ee50d0:docs/superpowers/plans/2026-11-23-advanced-gitleaks.md:jwt:124
+d79e4533a7a482d4b7121b14bdac7163d4ee50d0:docs/superpowers/plans/2026-11-23-advanced-gitleaks.md:template-env-assignment:118
+d79e4533a7a482d4b7121b14bdac7163d4ee50d0:docs/superpowers/plans/2026-11-23-advanced-gitleaks.md:template-env-assignment:124
+d79e4533a7a482d4b7121b14bdac7163d4ee50d0:docs/superpowers/plans/2026-11-23-advanced-gitleaks.md:template-env-assignment:233
+d79e4533a7a482d4b7121b14bdac7163d4ee50d0:docs/superpowers/plans/2026-11-23-advanced-gitleaks.md:template-env-assignment:263
+d79e4533a7a482d4b7121b14bdac7163d4ee50d0:docs/superpowers/plans/2026-11-23-advanced-gitleaks.md:template-env-assignment:522
+d79e4533a7a482d4b7121b14bdac7163d4ee50d0:docs/superpowers/plans/2026-11-23-advanced-gitleaks.md:template-env-assignment:79
+6232b040d7aee316ff4910c25815651da1a81175:.superpowers/sdd/final-fix-report.md:template-env-assignment:13
+6232b040d7aee316ff4910c25815651da1a81175:.superpowers/sdd/final-fix-report.md:template-env-assignment:25
+6232b040d7aee316ff4910c25815651da1a81175:.superpowers/sdd/final-fix-report.md:template-env-assignment:40
+6232b040d7aee316ff4910c25815651da1a81175:.superpowers/sdd/final-fix-report.md:template-env-assignment:50
+6232b040d7aee316ff4910c25815651da1a81175:.superpowers/sdd/final-fix-report.md:template-env-assignment:72
+6232b040d7aee316ff4910c25815651da1a81175:.superpowers/sdd/final-fix-report.md:template-env-assignment:73
+67027c797fbc53fb46f883812ec13fe2a3800ad6:infra/scripts/gen-keys.mjs:template-env-assignment:111
+6cda1935d58568df1c5a00977ae7f3c1a4e18a9d:docs/superpowers/plans/2026-11-23-advanced-gitleaks.md:jwt:124
+6cda1935d58568df1c5a00977ae7f3c1a4e18a9d:docs/superpowers/plans/2026-11-23-advanced-gitleaks.md:template-env-assignment:118
+6cda1935d58568df1c5a00977ae7f3c1a4e18a9d:docs/superpowers/plans/2026-11-23-advanced-gitleaks.md:template-env-assignment:124
+6cda1935d58568df1c5a00977ae7f3c1a4e18a9d:docs/superpowers/plans/2026-11-23-advanced-gitleaks.md:template-env-assignment:233
+6cda1935d58568df1c5a00977ae7f3c1a4e18a9d:docs/superpowers/plans/2026-11-23-advanced-gitleaks.md:template-env-assignment:263
+6cda1935d58568df1c5a00977ae7f3c1a4e18a9d:docs/superpowers/plans/2026-11-23-advanced-gitleaks.md:template-env-assignment:522
+6cda1935d58568df1c5a00977ae7f3c1a4e18a9d:docs/superpowers/plans/2026-11-23-advanced-gitleaks.md:template-env-assignment:79
+ddc82289f76c0e4b1d4822c25981b7cb99da4f50:docs/stories/002-advanced-gitleaks.md:template-env-assignment:17
+ddc82289f76c0e4b1d4822c25981b7cb99da4f50:docs/stories/board-data.js:template-env-assignment:29
+ddc82289f76c0e4b1d4822c25981b7cb99da4f50:test/gitleaks/fixtures/jwt-leak/docs/jwt.md:jwt:1
+ddc82289f76c0e4b1d4822c25981b7cb99da4f50:test/gitleaks/fixtures/jwt-leak/docs/jwt.md:template-env-assignment:1
+ddc82289f76c0e4b1d4822c25981b7cb99da4f50:test/gitleaks/fixtures/template-env-leak/docs/keys.md:template-env-assignment:1
